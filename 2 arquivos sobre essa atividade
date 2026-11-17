@@ -1,0 +1,151 @@
+# trabalho-de-Atividade-de-Implementa-o---01
+essa atividade sobre a implementação de um sistema de gestão de condomino sobre a gestão de contas 
+
+
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+public class ContaEnergia {
+    private static final BigDecimal TARIFA_BASICA = new BigDecimal("0.92");
+    private static final BigDecimal PERCENTUAL_ILUMINACAO = new BigDecimal("0.025"); // 2,5%
+    private static final BigDecimal PERCENTUAL_ICMS = new BigDecimal("0.22");        // 22%
+    private static final BigDecimal LIMITE_ISENCAO_KWH = new BigDecimal("90");
+
+    private final String mesReferencia;
+    private final BigDecimal leituraAnterior;
+    private final BigDecimal leituraAtual;
+
+    public ContaEnergia(String mesReferencia, double leituraAnterior, double leituraAtual) {
+        if (mesReferencia == null || mesReferencia.isBlank()) {
+            throw new IllegalArgumentException("O mês de referência é obrigatório.");
+        }
+        if (leituraAnterior < 0 || leituraAtual < leituraAnterior) {
+            throw new IllegalArgumentException(
+                "A leitura atual (" + leituraAtual + ") não pode ser inferior à leitura anterior (" + leituraAnterior + ")."
+            );
+        }
+        this.mesReferencia = mesReferencia;
+        this.leituraAnterior = BigDecimal.valueOf(leituraAnterior);
+        this.leituraAtual = BigDecimal.valueOf(leituraAtual);
+    }
+
+    public double calcularConsumo() {
+        return leituraAtual.subtract(leituraAnterior).doubleValue();
+    }
+
+    public double calcularValorTotal() {
+        BigDecimal consumo = leituraAtual.subtract(leituraAnterior);
+        BigDecimal valorConsumo = consumo.multiply(TARIFA_BASICA);
+
+        // Regra de isenção abaixo de 90 KWh
+        if (consumo.compareTo(LIMITE_ISENCAO_KWH) < 0) {
+            return valorConsumo.setScale(2, RoundingMode.HALF_UP).doubleValue();
+        }
+
+        BigDecimal iluminacao = valorConsumo.multiply(PERCENTUAL_ILUMINACAO);
+        BigDecimal subtotal = valorConsumo.add(iluminacao);
+        BigDecimal icms = subtotal.multiply(PERCENTUAL_ICMS);
+
+        return subtotal.add(icms).setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    public ContaEnergia compararMaisCara(ContaEnergia outraConta) {
+        if (outraConta == null) {
+            return this;
+        }
+        return (this.calcularValorTotal() >= outraConta.calcularValorTotal()) ? this : outraConta;
+    }
+
+    public String gerarResumo() {
+        return String.format(
+            "Mês: %-10s | Consumo: %6.2f KWh | Valor Total: R$ %7.2f",
+            this.mesReferencia, calcularConsumo(), calcularValorTotal()
+        );
+    }
+
+    public String getMesReferencia() {
+        return mesReferencia;
+    }
+}
+
+
+
+
+
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+public class ContaEnergia {
+    private static final BigDecimal TARIFA_BASICA = new BigDecimal("0.92");
+    private static final BigDecimal PERCENTUAL_ILUMINACAO = new BigDecimal("0.025"); // 2,5%
+    private static final BigDecimal PERCENTUAL_ICMS = new BigDecimal("0.22");        // 22%
+    private static final BigDecimal LIMITE_ISENCAO_KWH = new BigDecimal("90");
+
+    private final String mesReferencia;
+    private final BigDecimal leituraAnterior;
+    private final BigDecimal leituraAtual;
+
+    public ContaEnergia(String mesReferencia, double leituraAnterior, double leituraAtual) {
+        if (mesReferencia == null || mesReferencia.isBlank()) {
+            throw new IllegalArgumentException("O mês de referência é obrigatório.");
+        }
+        if (leituraAnterior < 0 || leituraAtual < leituraAnterior) {
+            throw new IllegalArgumentException(
+                "A leitura atual (" + leituraAtual + ") não pode ser inferior à leitura anterior (" + leituraAnterior + ")."
+            );
+        }
+        this.mesReferencia = mesReferencia;
+        this.leituraAnterior = BigDecimal.valueOf(leituraAnterior);
+        this.leituraAtual = BigDecimal.valueOf(leituraAtual);
+    }
+
+    public double calcularConsumo() {
+        return leituraAtual.subtract(leituraAnterior).doubleValue();
+    }
+
+    public double calcularValorTotal() {
+        BigDecimal consumo = leituraAtual.subtract(leituraAnterior);
+        BigDecimal valorConsumo = consumo.multiply(TARIFA_BASICA);
+
+        // Regra de isenção abaixo de 90 KWh
+        if (consumo.compareTo(LIMITE_ISENCAO_KWH) < 0) {
+            return valorConsumo.setScale(2, RoundingMode.HALF_UP).doubleValue();
+        }
+
+        BigDecimal iluminacao = valorConsumo.multiply(PERCENTUAL_ILUMINACAO);
+        BigDecimal subtotal = valorConsumo.add(iluminacao);
+        BigDecimal icms = subtotal.multiply(PERCENTUAL_ICMS);
+
+        return subtotal.add(icms).setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    public ContaEnergia compararMaisCara(ContaEnergia outraConta) {
+        if (outraConta == null) {
+            return this;
+        }
+        return (this.calcularValorTotal() >= outraConta.calcularValorTotal()) ? this : outraConta;
+    }
+
+    public String gerarResumo() {
+        return String.format(
+            "Mês: %-10s | Consumo: %6.2f KWh | Valor Total: R$ %7.2f",
+            this.mesReferencia, calcularConsumo(), calcularValorTotal()
+        );
+    }
+
+    public String getMesReferencia() {
+        return mesReferencia;
+    }
+}
+
+
+
+
+/**
+ * Imovel
+ */
+public interface Imovel {
+
+}
